@@ -1,0 +1,1805 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>تحدي الألوان المائية</title>
+    <style>
+        :root {
+            --primary-color: #3498db;
+            --secondary-color: #2980b9;
+            --success-color: #2ecc71;
+            --danger-color: #e74c3c;
+            --warning-color: #f39c12;
+            --tube-border: #34495e;
+            --background: #f0f8ff;
+            --text-dark: #2c3e50;
+            --menu-bg: #ffffff;
+            --shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            --level-easy: #2ecc71;
+            --level-medium: #f1c40f;
+            --level-hard: #e74c3c;
+            --level-expert: #9b59b6;
+            --level-master: #e84393;
+            --level-legend: #6c5ce7;
+            --level-ultimate: #00b894;
+        }
+        
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--background);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+            transition: background-color 0.3s;
+            position: relative;
+            padding-bottom: 70px;
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+        }
+        
+        .main-menu {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            max-width: 800px;
+            background-color: var(--menu-bg);
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: var(--shadow);
+            text-align: center;
+            animation: fadeIn 0.5s ease-out;
+        }
+        
+        .game-title {
+            color: var(--primary-color);
+            font-size: 3rem;
+            margin-bottom: 30px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        
+        .menu-buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            width: 100%;
+            max-width: 300px;
+        }
+        
+        .menu-btn {
+            padding: 15px;
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: var(--shadow);
+        }
+        
+        .menu-btn:hover {
+            background-color: var(--secondary-color);
+            transform: translateY(-3px);
+        }
+        
+        .menu-btn:active {
+            transform: translateY(0);
+        }
+        
+        .btn-start {
+            background-color: var(--success-color);
+        }
+        
+        .btn-exit {
+            background-color: var(--danger-color);
+        }
+        
+        .game-screen {
+            display: none;
+            width: 100%;
+            flex-direction: column;
+            align-items: center;
+            animation: fadeIn 0.5s ease-out;
+        }
+        
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+            max-width: 800px;
+            margin-bottom: 20px;
+            background-color: var(--menu-bg);
+            padding: 15px 25px;
+            border-radius: 15px;
+            box-shadow: var(--shadow);
+        }
+        
+        .level-info {
+            font-weight: bold;
+            font-size: 1.2rem;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            align-items: center;
+        }
+        
+        .level-difficulty {
+            padding: 5px 10px;
+            border-radius: 5px;
+            font-size: 0.9rem;
+            font-weight: bold;
+            color: white;
+        }
+        
+        .timer {
+            background-color: var(--primary-color);
+            padding: 5px 10px;
+            border-radius: 5px;
+            color: white;
+            font-weight: bold;
+        }
+        
+        .timer.danger {
+            background-color: var(--danger-color);
+            animation: pulse 1s infinite;
+        }
+        
+        .easy {
+            background-color: var(--level-easy);
+        }
+        
+        .medium {
+            background-color: var(--level-medium);
+        }
+        
+        .hard {
+            background-color: var(--level-hard);
+        }
+        
+        .expert {
+            background-color: var(--level-expert);
+        }
+        
+        .master {
+            background-color: var(--level-master);
+        }
+        
+        .legend {
+            background-color: var(--level-legend);
+        }
+        
+        .ultimate {
+            background-color: var(--level-ultimate);
+        }
+        
+        .game-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 25px;
+            margin-bottom: 30px;
+            max-width: 800px;
+        }
+        
+        .tube {
+            width: 70px;
+            height: 220px;
+            border: 4px solid var(--tube-border);
+            border-bottom: 20px solid var(--tube-border);
+            border-radius: 8px 8px 40px 40px;
+            display: flex;
+            flex-direction: column-reverse;
+            cursor: pointer;
+            background-color: white;
+            position: relative;
+            margin-bottom: 15px;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        
+        .tube:hover {
+            transform: translateY(-5px);
+        }
+        
+        .liquid {
+            height: 44px;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+        
+        .selected {
+            box-shadow: 0 0 20px var(--primary-color);
+            transform: translateY(-10px);
+        }
+        
+        .selected-hint {
+            box-shadow: 0 0 20px var(--success-color);
+        }
+        
+        .controls {
+            display: flex;
+            gap: 15px;
+            margin-top: 25px;
+            flex-wrap: wrap;
+            justify-content: center;
+            width: 100%;
+        }
+        
+        .game-btn {
+            padding: 12px 25px;
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: bold;
+            transition: all 0.3s;
+            box-shadow: var(--shadow);
+        }
+        
+        .game-btn:hover {
+            background-color: var(--secondary-color);
+            transform: translateY(-2px);
+        }
+        
+        .game-btn:active {
+            transform: translateY(0);
+        }
+        
+        .message {
+            font-size: 1.3rem;
+            font-weight: bold;
+            color: var(--success-color);
+            padding: 20px 30px;
+            border-radius: 15px;
+            background-color: rgba(255, 255, 255, 0.95);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+            text-align: center;
+            max-width: 90%;
+            animation: pulse 2s infinite, fadeIn 0.5s ease-out;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 1000;
+            display: none;
+            line-height: 1.5;
+            border: 3px solid var(--success-color);
+        }
+        
+        .levels-screen {
+            display: none;
+            width: 100%;
+            max-width: 1000px;
+            flex-direction: column;
+            align-items: center;
+            animation: fadeIn 0.5s ease-out;
+            background-color: var(--menu-bg);
+            padding: 30px;
+            border-radius: 20px;
+            box-shadow: var(--shadow);
+        }
+        
+        .levels-title {
+            color: var(--primary-color);
+            font-size: 2rem;
+            margin-bottom: 30px;
+        }
+        
+        .levels-category {
+            width: 100%;
+            margin-bottom: 30px;
+        }
+        
+        .category-title {
+            font-size: 1.5rem;
+            color: var(--primary-color);
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .category-title::before {
+            content: "";
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            margin-right: 10px;
+        }
+        
+        .easy-title::before {
+            background-color: var(--level-easy);
+        }
+        
+        .medium-title::before {
+            background-color: var(--level-medium);
+        }
+        
+        .hard-title::before {
+            background-color: var(--level-hard);
+        }
+        
+        .expert-title::before {
+            background-color: var(--level-expert);
+        }
+        
+        .master-title::before {
+            background-color: var(--level-master);
+        }
+        
+        .legend-title::before {
+            background-color: var(--level-legend);
+        }
+        
+        .ultimate-title::before {
+            background-color: var(--level-ultimate);
+        }
+        
+        .levels-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+            gap: 15px;
+            width: 100%;
+        }
+        
+        .level-btn {
+            padding: 15px;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 1.2rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: var(--shadow);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .level-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+        }
+        
+        .level-btn.completed::after {
+            content: "✓";
+            position: absolute;
+            top: 2px;
+            right: 5px;
+            font-size: 0.8rem;
+        }
+        
+        .level-btn.easy {
+            background-color: var(--level-easy);
+        }
+        
+        .level-btn.medium {
+            background-color: var(--level-medium);
+        }
+        
+        .level-btn.hard {
+            background-color: var(--level-hard);
+        }
+        
+        .level-btn.expert {
+            background-color: var(--level-expert);
+        }
+        
+        .level-btn.master {
+            background-color: var(--level-master);
+        }
+        
+        .level-btn.legend {
+            background-color: var(--level-legend);
+        }
+        
+        .level-btn.ultimate {
+            background-color: var(--level-ultimate);
+        }
+        
+        .level-btn.locked {
+            background-color: #95a5a6;
+            cursor: not-allowed;
+        }
+        
+        .settings-screen {
+            display: none;
+            width: 100%;
+            max-width: 500px;
+            flex-direction: column;
+            align-items: center;
+            background-color: var(--menu-bg);
+            padding: 30px;
+            border-radius: 20px;
+            box-shadow: var(--shadow);
+            animation: fadeIn 0.5s ease-out;
+        }
+        
+        .settings-title {
+            color: var(--primary-color);
+            font-size: 2rem;
+            margin-bottom: 30px;
+        }
+        
+        .settings-option {
+            width: 100%;
+            margin-bottom: 20px;
+        }
+        
+        .settings-option label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+        }
+        
+        .settings-option select {
+            width: 100%;
+            padding: 10px;
+            border-radius: 8px;
+            border: 2px solid #ddd;
+            font-size: 1rem;
+        }
+        
+        .language-switcher {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            z-index: 1000;
+        }
+        
+        .language-btn {
+            padding: 10px 15px;
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 20px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 100px;
+        }
+        
+        .language-btn:hover {
+            background-color: var(--secondary-color);
+            transform: translateY(-2px);
+        }
+        
+        .language-btn.active {
+            background-color: var(--success-color);
+        }
+        
+        .sound-btn {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            z-index: 1000;
+            box-shadow: var(--shadow);
+            transition: all 0.3s;
+        }
+        
+        .sound-btn:hover {
+            background-color: var(--secondary-color);
+            transform: scale(1.1);
+        }
+        
+        .background-btn {
+            padding: 10px 15px;
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 20px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 100px;
+        }
+        
+        .background-btn:hover {
+            background-color: var(--secondary-color);
+            transform: translateY(-2px);
+        }
+        
+        .backgrounds-container {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            z-index: 1000;
+        }
+        
+        .backgrounds-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            background-color: rgba(255, 255, 255, 0.9);
+            padding: 15px;
+            border-radius: 10px;
+            box-shadow: var(--shadow);
+            max-height: 200px;
+            overflow-y: auto;
+        }
+        
+        .background-thumb {
+            width: 60px;
+            height: 60px;
+            border-radius: 5px;
+            cursor: pointer;
+            background-size: cover;
+            background-position: center;
+            border: 2px solid transparent;
+            transition: all 0.3s;
+        }
+        
+        .background-thumb:hover {
+            transform: scale(1.1);
+            border-color: var(--primary-color);
+        }
+        
+        .background-thumb.active {
+            border-color: var(--success-color);
+            transform: scale(1.05);
+        }
+        
+        .levels-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+            margin-bottom: 20px;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        @keyframes pulse {
+            0% { transform: translate(-50%, -50%) scale(1); }
+            50% { transform: translate(-50%, -50%) scale(1.05); }
+            100% { transform: translate(-50%, -50%) scale(1); }
+        }
+        
+        @media (max-width: 600px) {
+            .game-title {
+                font-size: 2rem;
+            }
+            
+            .tube {
+                width: 50px;
+                height: 180px;
+            }
+            
+            .liquid {
+                height: 35px;
+            }
+            
+            .controls {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .game-btn {
+                width: 200px;
+            }
+            
+            .levels-grid {
+                grid-template-columns: repeat(auto-fill, minmax(60px, 1fr));
+            }
+            
+            .level-btn {
+                padding: 10px;
+                font-size: 1rem;
+            }
+            
+            .language-switcher {
+                bottom: 10px;
+                right: 10px;
+            }
+            
+            .language-btn {
+                padding: 8px;
+                width: 80px;
+                font-size: 0.9rem;
+            }
+            
+            .sound-btn {
+                top: 10px;
+                right: 10px;
+                width: 36px;
+                height: 36px;
+                font-size: 0.9rem;
+            }
+            
+            .backgrounds-container {
+                bottom: 10px;
+                left: 10px;
+            }
+            
+            .background-thumb {
+                width: 50px;
+                height: 50px;
+            }
+            
+            .background-btn {
+                padding: 8px;
+                width: 80px;
+                font-size: 0.9rem;
+            }
+            
+            .message {
+                font-size: 1.1rem;
+                padding: 15px 20px;
+                max-width: 85%;
+            }
+        }
+
+        @media (max-width: 400px) {
+            .message {
+                font-size: 1rem;
+                padding: 12px 16px;
+                max-width: 90%;
+            }
+            
+            .level-info {
+                font-size: 1rem;
+                gap: 5px;
+            }
+            
+            .header {
+                padding: 10px 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Sound control button -->
+    <button class="sound-btn" id="sound-btn">🔊</button>
+    
+    <!-- Main menu interface -->
+    <div class="main-menu" id="main-menu">
+        <h1 class="game-title" id="game-title">تحدي الألوان المائية</h1>
+        <div class="menu-buttons">
+            <button class="menu-btn btn-start" id="start-btn">بدء اللعبة</button>
+            <button class="menu-btn" id="levels-btn">المستويات</button>
+            <button class="menu-btn" id="settings-btn">الإعدادات</button>
+            <button class="menu-btn btn-exit" id="exit-btn">خروج</button>
+            <button class="menu-btn" id="new-game-btn">لعبة جديدة من البداية</button>
+        </div>
+    </div>
+    
+    <!-- Game interface -->
+    <div class="game-screen" id="game-screen">
+        <div class="header">
+            <div class="level-info">
+                <span id="level-text">المستوى:</span> 
+                <span id="level-display">1</span>
+                <span class="level-difficulty easy" id="level-difficulty">سهل</span>
+                <span class="timer" id="timer">02:00</span>
+            </div>
+            <button class="game-btn" id="back-btn">رجوع</button>
+        </div>
+        
+        <div class="game-container" id="game-container"></div>
+        
+        <div class="controls">
+            <button class="game-btn" id="restart-btn">إعادة</button>
+            <button class="game-btn" id="hint-btn">تلميح</button>
+        </div>
+        
+        <div class="message" id="message"></div>
+    </div>
+    
+    <!-- Levels interface -->
+    <div class="levels-screen" id="levels-screen">
+        <div class="levels-header">
+            <h2 class="levels-title" id="levels-title">اختر مستوى</h2>
+            <button class="game-btn" id="back-levels-btn">رجوع</button>
+        </div>
+        
+        <div class="levels-category">
+            <h3 class="category-title easy-title" id="easy-levels-title">المستويات السهلة (1-100)</h3>
+            <div class="levels-grid" id="easy-levels"></div>
+        </div>
+        
+        <div class="levels-category">
+            <h3 class="category-title medium-title" id="medium-levels-title">المستويات المتوسطة (101-200)</h3>
+            <div class="levels-grid" id="medium-levels"></div>
+        </div>
+        
+        <div class="levels-category">
+            <h3 class="category-title hard-title" id="hard-levels-title">المستويات الصعبة (201-300)</h3>
+            <div class="levels-grid" id="hard-levels"></div>
+        </div>
+        
+        <div class="levels-category">
+            <h3 class="category-title expert-title" id="expert-levels-title">المستويات المتقدمة (301-500)</h3>
+            <div class="levels-grid" id="expert-levels"></div>
+        </div>
+        
+        <div class="levels-category">
+            <h3 class="category-title master-title" id="master-levels-title">مستويات الخبير (501-700)</h3>
+            <div class="levels-grid" id="master-levels"></div>
+        </div>
+        
+        <div class="levels-category">
+            <h3 class="category-title legend-title" id="legend-levels-title">مستويات الأسطورة (701-800)</h3>
+            <div class="levels-grid" id="legend-levels"></div>
+        </div>
+        
+        <div class="levels-category">
+            <h3 class="category-title ultimate-title" id="ultimate-levels-title">المستويات النهائية (801-900)</h3>
+            <div class="levels-grid" id="ultimate-levels"></div>
+        </div>
+    </div>
+    
+    <!-- Settings interface -->
+    <div class="settings-screen" id="settings-screen">
+        <h2 class="settings-title" id="settings-title">الإعدادات</h2>
+        
+        <div class="settings-option">
+            <label for="theme-select" id="theme-label">اختر المظهر:</label>
+            <select id="theme-select">
+                <option value="light">فاتح</option>
+                <option value="dark">داكن</option>
+            </select>
+        </div>
+        
+        <div class="settings-option">
+            <label for="sound-select" id="sound-label">صوت اللعبة:</label>
+            <select id="sound-select">
+                <option value="1">عالٍ</option>
+                <option value="0.7">متوسط</option>
+                <option value="0.4">منخفض</option>
+                <option value="0">صامت</option>
+            </select>
+        </div>
+        
+        <div class="settings-option">
+            <button id="test-sound-btn" class="game-btn">تجربة الصوت</button>
+        </div>
+        
+        <button class="game-btn" id="save-settings-btn">حفظ الإعدادات</button>
+        <button class="game-btn" id="back-settings-btn" style="margin-top: 15px;">رجوع</button>
+    </div>
+
+    <!-- Language switcher -->
+    <div class="language-switcher">
+        <button class="language-btn active" id="ar-btn">
+            <span>العربية</span>
+        </button>
+        <button class="language-btn" id="en-btn">
+            <span>English</span>
+        </button>
+    </div>
+
+    <!-- Background changer -->
+    <div class="backgrounds-container" id="backgrounds-container">
+        <button class="background-btn" id="background-btn">تغيير الخلفية</button>
+        <div class="backgrounds-grid" id="backgrounds-grid" style="display: none;"></div>
+    </div>
+
+    <!-- Audio elements -->
+    <audio id="click-sound" preload="auto">
+        <source src="sounds/click.mp3" type="audio/mpeg">
+    </audio>
+    
+    <audio id="tube-sound" preload="auto">
+        <source src="sounds/tube.mp3" type="audio/mpeg">
+    </audio>
+    
+    <audio id="win-sound" preload="auto">
+        <source src="sounds/win.mp3" type="audio/mpeg">
+    </audio>
+    
+    <audio id="mix-sound" preload="auto">
+        <source src="sounds/mix.mp3" type="audio/mpeg">
+    </audio>
+
+    <audio id="error-sound" preload="auto">
+        <source src="sounds/error.mp3" type="audio/mpeg">
+    </audio>
+
+    <script>
+        // Game state
+        const gameState = {
+            currentScreen: 'main-menu',
+            levels: Array(900).fill().map((_, i) => {
+                const level = i + 1;
+                let difficulty = 'easy';
+                if (level > 100 && level <= 200) difficulty = 'medium';
+                else if (level > 200 && level <= 300) difficulty = 'hard';
+                else if (level > 300 && level <= 500) difficulty = 'expert';
+                else if (level > 500 && level <= 700) difficulty = 'master';
+                else if (level > 700 && level <= 800) difficulty = 'legend';
+                else if (level > 800) difficulty = 'ultimate';
+                
+                return {
+                    level,
+                    difficulty,
+                    completed: localStorage.getItem(`level-${level}-completed`) === 'true',
+                    unlocked: level === 1 || localStorage.getItem(`level-${level}-unlocked`) === 'true' ||
+                              (level > 1 && localStorage.getItem(`level-${level-1}-completed`) === 'true'),
+                    bestTime: localStorage.getItem(`level-${level}-bestTime`) || null
+                };
+            }),
+            settings: {
+                theme: localStorage.getItem('theme') || 'light',
+                language: localStorage.getItem('language') || 'ar',
+                sound: localStorage.getItem('sound') !== null ? localStorage.getItem('sound') : '1',
+                soundEnabled: localStorage.getItem('soundEnabled') !== 'false',
+                audioInitialized: false,
+                background: localStorage.getItem('background') || 'default'
+            },
+            game: {
+                tubes: [],
+                selectedTubeIndex: null,
+                colors: [],
+                currentLevel: 1,
+                moves: 0,
+                timeLeft: 120,
+                timerInterval: null,
+                allColors: [
+                    '#e74c3c', '#3498db', '#2ecc71', '#f1c40f', 
+                    '#9b59b6', '#1abc9c', '#e67e22', '#34495e',
+                    '#d35400', '#16a085', '#c0392b', '#8e44ad',
+                    '#27ae60', '#8e44ad', '#f39c12', '#7f8c8d'
+                ]
+            }
+        };
+
+        // Background images
+        const backgrounds = [
+            { id: 'default', name: 'افتراضي', url: '' },
+            { id: 'gradient1', name: 'تدرج أزرق', url: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)' },
+            { id: 'gradient2', name: 'تدرج وردي', url: 'linear-gradient(135deg, #f093fb 0%, #f5576c 100%)' },
+            { id: 'gradient3', name: 'تدرج أخضر', url: 'linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)' },
+            { id: 'gradient4', name: 'تدرج برتقالي', url: 'linear-gradient(135deg, #fa709a 0%, #fee140 100%)' },
+            { id: 'gradient5', name: 'تدرج أرجواني', url: 'linear-gradient(135deg, #a8edea 0%, #fed6e3 100%)' },
+            { id: 'gradient6', name: 'تدرج ذهبي', url: 'linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%)' },
+            { id: 'gradient7', name: 'تدرج رمادي', url: 'linear-gradient(135deg, #e3efe8 0%, #96a7cf 100%)' },
+            { id: 'gradient8', name: 'تدرج أزرق غامق', url: 'linear-gradient(135deg, #1e3c72 0%, #2a5298 100%)' },
+            { id: 'gradient9', name: 'تدرج أخضر غامق', url: 'linear-gradient(135deg, #134e5e 0%, #71b280 100%)' },
+            { id: 'gradient10', name: 'تدرج أحمر', url: 'linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%)' }
+        ];
+
+        // Sound system
+        const soundSystem = {
+            sounds: {
+                click: document.getElementById('click-sound'),
+                tubeClick: document.getElementById('tube-sound'),
+                win: document.getElementById('win-sound'),
+                mix: document.getElementById('mix-sound'),
+                error: document.getElementById('error-sound')
+            },
+            
+            init: function() {
+                // Ensure sounds are loaded
+                Object.values(this.sounds).forEach(sound => {
+                    sound.load();
+                });
+                console.log('تم تهيئة نظام الصوت');
+            },
+            
+            play: function(type) {
+                if (!gameState.settings.soundEnabled || !this.sounds[type]) return;
+                
+                try {
+                    const sound = this.sounds[type];
+                    sound.volume = parseFloat(gameState.settings.sound);
+                    sound.currentTime = 0;
+                    
+                    const playPromise = sound.play();
+                    
+                    if (playPromise !== undefined) {
+                        playPromise.catch(error => {
+                            console.log('خطأ في التشغيل:', error);
+                        });
+                    }
+                } catch (error) {
+                    console.log('خطأ في الصوت:', error);
+                }
+            },
+            
+            setVolume: function(volume) {
+                Object.values(this.sounds).forEach(sound => {
+                    sound.volume = volume;
+                });
+            },
+            
+            testAllSounds: function() {
+                if (!gameState.settings.soundEnabled) {
+                    alert('الصوت معطل في الإعدادات');
+                    return;
+                }
+                
+                const soundsOrder = ['click', 'tubeClick', 'mix', 'win', 'error'];
+                let index = 0;
+                
+                const playNextSound = () => {
+                    if (index >= soundsOrder.length) return;
+                    
+                    this.play(soundsOrder[index]);
+                    index++;
+                    
+                    setTimeout(playNextSound, 800);
+                };
+                
+                playNextSound();
+            }
+        };
+
+        // DOM elements
+        const elements = {
+            screens: {
+                mainMenu: document.getElementById('main-menu'),
+                gameScreen: document.getElementById('game-screen'),
+                levelsScreen: document.getElementById('levels-screen'),
+                settingsScreen: document.getElementById('settings-screen')
+            },
+            buttons: {
+                start: document.getElementById('start-btn'),
+                levels: document.getElementById('levels-btn'),
+                settings: document.getElementById('settings-btn'),
+                exit: document.getElementById('exit-btn'),
+                back: document.getElementById('back-btn'),
+                backLevels: document.getElementById('back-levels-btn'),
+                backSettings: document.getElementById('back-settings-btn'),
+                restart: document.getElementById('restart-btn'),
+                hint: document.getElementById('hint-btn'),
+                saveSettings: document.getElementById('save-settings-btn'),
+                newGame: document.getElementById('new-game-btn'),
+                sound: document.getElementById('sound-btn'),
+                testSound: document.getElementById('test-sound-btn'),
+                language: {
+                    ar: document.getElementById('ar-btn'),
+                    en: document.getElementById('en-btn')
+                },
+                background: document.getElementById('background-btn')
+            },
+            game: {
+                container: document.getElementById('game-container'),
+                levelDisplay: document.getElementById('level-display'),
+                levelDifficulty: document.getElementById('level-difficulty'),
+                levelText: document.getElementById('level-text'),
+                message: document.getElementById('message'),
+                timer: document.getElementById('timer')
+            },
+            levelsGrids: {
+                easy: document.getElementById('easy-levels'),
+                medium: document.getElementById('medium-levels'),
+                hard: document.getElementById('hard-levels'),
+                expert: document.getElementById('expert-levels'),
+                master: document.getElementById('master-levels'),
+                legend: document.getElementById('legend-levels'),
+                ultimate: document.getElementById('ultimate-levels')
+            },
+            settings: {
+                themeSelect: document.getElementById('theme-select'),
+                soundSelect: document.getElementById('sound-select')
+            },
+            backgrounds: {
+                container: document.getElementById('backgrounds-container'),
+                grid: document.getElementById('backgrounds-grid'),
+                button: document.getElementById('background-btn')
+            }
+        };
+
+        // Translations
+        const translations = {
+            ar: {
+                gameTitle: "تحدي الألوان المائية",
+                levelsTitle: "اختر مستوى",
+                easyLevelsTitle: "المستويات السهلة (1-100)",
+                mediumLevelsTitle: "المستويات المتوسطة (101-200)",
+                hardLevelsTitle: "المستويات الصعبة (201-300)",
+                expertLevelsTitle: "المستويات المتقدمة (301-500)",
+                masterLevelsTitle: "مستويات الخبير (501-700)",
+                legendLevelsTitle: "مستويات الأسطورة (701-800)",
+                ultimateLevelsTitle: "المستويات النهائية (801-900)",
+                settingsTitle: "الإعدادات",
+                themeLabel: "اختر المظهر:",
+                soundLabel: "صوت اللعبة:",
+                easy: "سهل",
+                medium: "متوسط",
+                hard: "صعب",
+                expert: "متقدم",
+                master: "خبير",
+                legend: "أسطورة",
+                ultimate: "نهائي",
+                levelText: "المستوى:",
+                winMessage: "مبروك! لقد أكملت المستوى {level} في {moves} حركات خلال {time}.",
+                confirmExit: "هل تريد الخروج حقاً؟",
+                confirmReset: "هل تريد بدء لعبة جديدة من البداية؟ سيتم فقدان كل تقدمك الحالي.",
+                soundDisabled: "الصوت معطل في الإعدادات. يرجى تفعيل الصوت أولاً.",
+                timeOut: "انتهى الوقت! سيتم إعادة المستوى.",
+                startBtn: "بدء اللعبة",
+                levelsBtn: "المستويات",
+                settingsBtn: "الإعدادات",
+                exitBtn: "خروج",
+                newGameBtn: "لعبة جديدة من البداية",
+                backBtn: "رجوع",
+                restartBtn: "إعادة",
+                hintBtn: "تلميح",
+                backLevelsBtn: "رجوع",
+                backSettingsBtn: "رجوع",
+                saveSettingsBtn: "حفظ الإعدادات",
+                testSoundBtn: "تجربة الصوت",
+                backgroundBtn: "تغيير الخلفية"
+            },
+            en: {
+                gameTitle: "Water Sort Puzzle",
+                levelsTitle: "Choose Level",
+                easyLevelsTitle: "Easy Levels (1-100)",
+                mediumLevelsTitle: "Medium Levels (101-200)",
+                hardLevelsTitle: "Hard Levels (201-300)",
+                expertLevelsTitle: "Expert Levels (301-500)",
+                masterLevelsTitle: "Master Levels (501-700)",
+                legendLevelsTitle: "Legend Levels (701-800)",
+                ultimateLevelsTitle: "Ultimate Levels (801-900)",
+                settingsTitle: "Settings",
+                themeLabel: "Select Theme:",
+                soundLabel: "Sound Volume:",
+                easy: "Easy",
+                medium: "Medium",
+                hard: "Hard",
+                expert: "Expert",
+                master: "Master",
+                legend: "Legend",
+                ultimate: "Ultimate",
+                levelText: "Level:",
+                winMessage: "Congratulations! You completed level {level} in {moves} moves in {time}.",
+                confirmExit: "Are you sure you want to exit?",
+                confirmReset: "Do you want to start a new game from the beginning? All your current progress will be lost.",
+                soundDisabled: "Sound is disabled in settings. Please enable sound first.",
+                timeOut: "Time's up! The level will restart.",
+                startBtn: "Start Game",
+                levelsBtn: "Levels",
+                settingsBtn: "Settings",
+                exitBtn: "Exit",
+                newGameBtn: "New Game from Start",
+                backBtn: "Back",
+                restartBtn: "Restart",
+                hintBtn: "Hint",
+                backLevelsBtn: "Back",
+                backSettingsBtn: "Back",
+                saveSettingsBtn: "Save Settings",
+                testSoundBtn: "Test Sound",
+                backgroundBtn: "Change Background"
+            }
+        };
+
+        // Initialize the game
+        function init() {
+            setupEventListeners();
+            soundSystem.init();
+            applySettings();
+            renderLevels();
+            renderBackgrounds();
+            showScreen('main-menu');
+            updateLanguage();
+            applyBackground();
+        }
+
+        // Set up event listeners
+        function setupEventListeners() {
+            // Main menu buttons
+            elements.buttons.start.addEventListener('click', () => {
+                soundSystem.play('click');
+                const firstUncompleted = gameState.levels.find(l => l.unlocked && !l.completed);
+                startGame(firstUncompleted ? firstUncompleted.level : 1);
+            });
+            
+            elements.buttons.levels.addEventListener('click', () => {
+                soundSystem.play('click');
+                showScreen('levels-screen');
+            });
+            
+            elements.buttons.settings.addEventListener('click', () => {
+                soundSystem.play('click');
+                showScreen('settings-screen');
+            });
+            
+            elements.buttons.exit.addEventListener('click', () => {
+                soundSystem.play('click');
+                if (confirm(translations[gameState.settings.language].confirmExit)) {
+                    if (window.history.length > 1) {
+                        window.history.back();
+                    } else {
+                        window.close();
+                    }
+                }
+            });
+            
+            elements.buttons.newGame.addEventListener('click', () => {
+                soundSystem.play('click');
+                if (confirm(translations[gameState.settings.language].confirmReset)) {
+                    resetGameProgress();
+                    startGame(1);
+                }
+            });
+
+            // Game buttons
+            elements.buttons.back.addEventListener('click', () => {
+                soundSystem.play('click');
+                stopTimer();
+                showScreen('main-menu');
+            });
+            
+            elements.buttons.restart.addEventListener('click', () => {
+                soundSystem.play('click');
+                restartGame();
+            });
+            
+            elements.buttons.hint.addEventListener('click', () => {
+                soundSystem.play('click');
+                giveHint();
+            });
+
+            // Levels screen buttons
+            elements.buttons.backLevels.addEventListener('click', () => {
+                soundSystem.play('click');
+                showScreen('main-menu');
+            });
+
+            // Settings screen buttons
+            elements.buttons.backSettings.addEventListener('click', () => {
+                soundSystem.play('click');
+                showScreen('main-menu');
+            });
+            
+            elements.buttons.saveSettings.addEventListener('click', () => {
+                soundSystem.play('click');
+                saveSettings();
+            });
+            
+            // Test sound button
+            elements.buttons.testSound.addEventListener('click', () => {
+                soundSystem.testAllSounds();
+            });
+            
+            // Language buttons
+            elements.buttons.language.ar.addEventListener('click', () => {
+                soundSystem.play('click');
+                gameState.settings.language = 'ar';
+                localStorage.setItem('language', 'ar');
+                updateLanguage();
+                applySettings();
+            });
+            
+            elements.buttons.language.en.addEventListener('click', () => {
+                soundSystem.play('click');
+                gameState.settings.language = 'en';
+                localStorage.setItem('language', 'en');
+                updateLanguage();
+                applySettings();
+            });
+            
+            // Sound button
+            elements.buttons.sound.addEventListener('click', () => {
+                soundSystem.play('click');
+                gameState.settings.soundEnabled = !gameState.settings.soundEnabled;
+                localStorage.setItem('soundEnabled', gameState.settings.soundEnabled);
+                updateSoundButton();
+            });
+            
+            // Background button
+            elements.buttons.background.addEventListener('click', () => {
+                soundSystem.play('click');
+                toggleBackgroundsGrid();
+            });
+        }
+
+        // Update language
+        function updateLanguage() {
+            const lang = gameState.settings.language;
+            document.documentElement.lang = lang;
+            document.documentElement.dir = lang === 'ar' ? 'rtl' : 'ltr';
+            
+            // Update all text elements
+            document.getElementById('game-title').textContent = translations[lang].gameTitle;
+            document.getElementById('levels-title').textContent = translations[lang].levelsTitle;
+            document.getElementById('easy-levels-title').textContent = translations[lang].easyLevelsTitle;
+            document.getElementById('medium-levels-title').textContent = translations[lang].mediumLevelsTitle;
+            document.getElementById('hard-levels-title').textContent = translations[lang].hardLevelsTitle;
+            document.getElementById('expert-levels-title').textContent = translations[lang].expertLevelsTitle;
+            document.getElementById('master-levels-title').textContent = translations[lang].masterLevelsTitle;
+            document.getElementById('legend-levels-title').textContent = translations[lang].legendLevelsTitle;
+            document.getElementById('ultimate-levels-title').textContent = translations[lang].ultimateLevelsTitle;
+            document.getElementById('settings-title').textContent = translations[lang].settingsTitle;
+            document.getElementById('theme-label').textContent = translations[lang].themeLabel;
+            document.getElementById('sound-label').textContent = translations[lang].soundLabel;
+            document.getElementById('level-text').textContent = translations[lang].levelText;
+            
+            // Update buttons
+            document.getElementById('start-btn').textContent = translations[lang].startBtn;
+            document.getElementById('levels-btn').textContent = translations[lang].levelsBtn;
+            document.getElementById('settings-btn').textContent = translations[lang].settingsBtn;
+            document.getElementById('exit-btn').textContent = translations[lang].exitBtn;
+            document.getElementById('new-game-btn').textContent = translations[lang].newGameBtn;
+            document.getElementById('back-btn').textContent = translations[lang].backBtn;
+            document.getElementById('restart-btn').textContent = translations[lang].restartBtn;
+            document.getElementById('hint-btn').textContent = translations[lang].hintBtn;
+            document.getElementById('back-levels-btn').textContent = translations[lang].backLevelsBtn;
+            document.getElementById('back-settings-btn').textContent = translations[lang].backSettingsBtn;
+            document.getElementById('save-settings-btn').textContent = translations[lang].saveSettingsBtn;
+            document.getElementById('test-sound-btn').textContent = translations[lang].testSoundBtn;
+            document.getElementById('background-btn').textContent = translations[lang].backgroundBtn;
+            
+            // Update level difficulty text
+            const difficultyElement = document.getElementById('level-difficulty');
+            const difficulty = gameState.levels[gameState.game.currentLevel - 1].difficulty;
+            difficultyElement.textContent = translations[lang][difficulty];
+            
+            // Update language buttons
+            elements.buttons.language.ar.classList.toggle('active', lang === 'ar');
+            elements.buttons.language.en.classList.toggle('active', lang === 'en');
+        }
+
+        // Update sound button
+        function updateSoundButton() {
+            elements.buttons.sound.textContent = gameState.settings.soundEnabled ? '🔊' : '🔇';
+        }
+
+        // Show specific screen
+        function showScreen(screen) {
+            gameState.currentScreen = screen;
+            
+            Object.values(elements.screens).forEach(s => {
+                s.style.display = 'none';
+            });
+            
+            switch (screen) {
+                case 'main-menu':
+                    elements.screens.mainMenu.style.display = 'flex';
+                    break;
+                case 'game-screen':
+                    elements.screens.gameScreen.style.display = 'flex';
+                    break;
+                case 'levels-screen':
+                    elements.screens.levelsScreen.style.display = 'flex';
+                    renderLevels();
+                    break;
+                case 'settings-screen':
+                    elements.screens.settingsScreen.style.display = 'flex';
+                    loadSettings();
+                    break;
+            }
+        }
+
+        // Start the game
+        function startGame(level) {
+            gameState.game.currentLevel = level;
+            initGame();
+            showScreen('game-screen');
+            startTimer();
+        }
+
+        // Restart the game
+        function restartGame() {
+            stopTimer();
+            initGame();
+            startTimer();
+        }
+
+        // Reset game progress
+        function resetGameProgress() {
+            for (let i = 1; i <= 900; i++) {
+                localStorage.removeItem(`level-${i}-completed`);
+                localStorage.removeItem(`level-${i}-unlocked`);
+                localStorage.removeItem(`level-${i}-bestTime`);
+            }
+            
+            gameState.levels = gameState.levels.map(level => ({
+                ...level,
+                completed: false,
+                unlocked: level.level === 1,
+                bestTime: null
+            }));
+            
+            gameState.game.currentLevel = 1;
+            
+            soundSystem.play('mix');
+        }
+
+        // Start countdown timer
+        function startTimer() {
+            stopTimer();
+            
+            gameState.game.timeLeft = 120;
+            
+            updateTimerDisplay();
+            
+            gameState.game.timerInterval = setInterval(() => {
+                gameState.game.timeLeft--;
+                updateTimerDisplay();
+                
+                if (gameState.game.timeLeft <= 10) {
+                    elements.game.timer.classList.add('danger');
+                }
+                
+                if (gameState.game.timeLeft <= 0) {
+                    stopTimer();
+                    handleTimeOut();
+                }
+            }, 1000);
+        }
+
+        // Stop timer
+        function stopTimer() {
+            if (gameState.game.timerInterval) {
+                clearInterval(gameState.game.timerInterval);
+                gameState.game.timerInterval = null;
+            }
+            elements.game.timer.classList.remove('danger');
+        }
+
+        // Update timer display
+        function updateTimerDisplay() {
+            const minutes = Math.floor(gameState.game.timeLeft / 60);
+            const seconds = gameState.game.timeLeft % 60;
+            elements.game.timer.textContent = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+        }
+
+        // Handle time out
+        function handleTimeOut() {
+            alert(translations[gameState.settings.language].timeOut);
+            restartGame();
+        }
+
+        // Initialize a new game
+        function initGame() {
+            elements.game.container.innerHTML = '';
+            gameState.game.tubes = [];
+            gameState.game.selectedTubeIndex = null;
+            gameState.game.moves = 0;
+            elements.game.message.style.display = 'none';
+            
+            const currentLevelData = gameState.levels[gameState.game.currentLevel - 1];
+            elements.game.levelDisplay.textContent = gameState.game.currentLevel;
+            
+            elements.game.levelDifficulty.className = 'level-difficulty ' + currentLevelData.difficulty;
+            elements.game.levelDifficulty.textContent = translations[gameState.settings.language][currentLevelData.difficulty];
+            
+            let colorCount, emptyTubes;
+            const baseLevel = gameState.game.currentLevel - 
+                (currentLevelData.difficulty === 'medium' ? 100 : 
+                 currentLevelData.difficulty === 'hard' ? 200 : 
+                 currentLevelData.difficulty === 'expert' ? 300 : 
+                 currentLevelData.difficulty === 'master' ? 500 : 
+                 currentLevelData.difficulty === 'legend' ? 700 : 
+                 currentLevelData.difficulty === 'ultimate' ? 800 : 0);
+
+            if (currentLevelData.difficulty === 'easy') {
+                colorCount = 3 + Math.floor(baseLevel / 25);
+                emptyTubes = 2 + Math.floor(baseLevel / 10);
+            } else if (currentLevelData.difficulty === 'medium') {
+                colorCount = 6 + Math.floor(baseLevel / 20);
+                emptyTubes = 1 + Math.floor(baseLevel / 15);
+            } else if (currentLevelData.difficulty === 'hard') {
+                colorCount = 9 + Math.floor(baseLevel / 15);
+                emptyTubes = Math.floor(baseLevel / 20);
+            } else if (currentLevelData.difficulty === 'expert') {
+                colorCount = 12 + Math.floor(baseLevel / 10);
+                emptyTubes = Math.max(0, 1 - Math.floor(baseLevel / 25));
+            } else if (currentLevelData.difficulty === 'master') {
+                colorCount = 15 + Math.floor(baseLevel / 8);
+                emptyTubes = Math.max(0, 1 - Math.floor(baseLevel / 20));
+            } else if (currentLevelData.difficulty === 'legend') {
+                colorCount = 18 + Math.floor(baseLevel / 5);
+                emptyTubes = Math.max(0, 1 - Math.floor(baseLevel / 15));
+            } else {
+                colorCount = 21 + Math.floor(baseLevel / 3);
+                emptyTubes = Math.max(0, 1 - Math.floor(baseLevel / 10));
+            }
+            
+            colorCount = Math.min(colorCount, gameState.game.allColors.length);
+            gameState.game.colors = gameState.game.allColors.slice(0, colorCount);
+            
+            const tubeCount = colorCount + emptyTubes;
+            
+            for (let i = 0; i < tubeCount; i++) {
+                const tube = document.createElement('div');
+                tube.className = 'tube';
+                tube.dataset.index = i;
+                tube.addEventListener('click', () => handleTubeClick(i));
+                elements.game.container.appendChild(tube);
+                gameState.game.tubes.push([]);
+            }
+            
+            distributeLiquids();
+        }
+
+        // Distribute liquids to tubes
+        function distributeLiquids() {
+            const currentLevelData = gameState.levels[gameState.game.currentLevel - 1];
+            
+            for (let i = 0; i < gameState.game.colors.length; i++) {
+                for (let j = 0; j < 4; j++) {
+                    gameState.game.tubes[i].push(gameState.game.colors[i]);
+                }
+            }
+            
+            let mixCount;
+            const baseLevel = gameState.game.currentLevel - 
+                (currentLevelData.difficulty === 'medium' ? 100 : 
+                 currentLevelData.difficulty === 'hard' ? 200 : 
+                 currentLevelData.difficulty === 'expert' ? 300 : 
+                 currentLevelData.difficulty === 'master' ? 500 : 
+                 currentLevelData.difficulty === 'legend' ? 700 : 
+                 currentLevelData.difficulty === 'ultimate' ? 800 : 0);
+
+            if (currentLevelData.difficulty === 'easy') {
+                mixCount = 100 + (baseLevel * 3);
+            } else if (currentLevelData.difficulty === 'medium') {
+                mixCount = 150 + (baseLevel * 4);
+            } else if (currentLevelData.difficulty === 'hard') {
+                mixCount = 200 + (baseLevel * 5);
+            } else if (currentLevelData.difficulty === 'expert') {
+                mixCount = 250 + (baseLevel * 6);
+            } else if (currentLevelData.difficulty === 'master') {
+                mixCount = 300 + (baseLevel * 7);
+            } else if (currentLevelData.difficulty === 'legend') {
+                mixCount = 350 + (baseLevel * 8);
+            } else {
+                mixCount = 400 + (baseLevel * 9);
+            }
+            
+            for (let i = 0; i < mixCount; i++) {
+                const fromTube = Math.floor(Math.random() * gameState.game.colors.length);
+                const toTube = Math.floor(Math.random() * gameState.game.tubes.length);
+                
+                if (gameState.game.tubes[fromTube].length > 0 && 
+                    gameState.game.tubes[toTube].length < 4) {
+                    const color = gameState.game.tubes[fromTube].pop();
+                    gameState.game.tubes[toTube].push(color);
+                }
+            }
+            
+            renderTubes();
+        }
+
+        // Render tubes and liquids
+        function renderTubes() {
+            const tubeElements = document.querySelectorAll('.tube');
+            
+            tubeElements.forEach((tube, index) => {
+                tube.innerHTML = '';
+                
+                gameState.game.tubes[index].forEach(color => {
+                    const liquid = document.createElement('div');
+                    liquid.className = 'liquid';
+                    liquid.style.backgroundColor = color;
+                    tube.appendChild(liquid);
+                });
+                
+                if (gameState.game.tubes[index].length === 0 && tube.classList.contains('selected')) {
+                    tube.classList.remove('selected');
+                    gameState.game.selectedTubeIndex = null;
+                }
+            });
+        }
+
+        // Handle tube click
+        function handleTubeClick(tubeIndex) {
+            soundSystem.play('tubeClick');
+            
+            if (gameState.game.selectedTubeIndex === null) {
+                if (gameState.game.tubes[tubeIndex].length === 0) {
+                    soundSystem.play('error');
+                    return;
+                }
+                
+                gameState.game.selectedTubeIndex = tubeIndex;
+                document.querySelectorAll('.tube')[tubeIndex].classList.add('selected');
+            } 
+            else if (gameState.game.selectedTubeIndex === tubeIndex) {
+                document.querySelectorAll('.tube')[tubeIndex].classList.remove('selected');
+                gameState.game.selectedTubeIndex = null;
+            } 
+            else {
+                const fromTube = gameState.game.selectedTubeIndex;
+                const toTube = tubeIndex;
+                
+                if (moveLiquid(fromTube, toTube)) {
+                    gameState.game.moves++;
+                    soundSystem.play('mix');
+                    
+                    if (checkWin()) {
+                        handleWin();
+                    }
+                } else {
+                    soundSystem.play('error');
+                }
+                
+                document.querySelectorAll('.tube')[fromTube].classList.remove('selected');
+                gameState.game.selectedTubeIndex = null;
+            }
+        }
+
+        // Move liquid between tubes
+        function moveLiquid(fromTubeIndex, toTubeIndex) {
+            const fromTube = gameState.game.tubes[fromTubeIndex];
+            const toTube = gameState.game.tubes[toTubeIndex];
+            
+            if (fromTube.length === 0) return false;
+            if (toTube.length >= 4) return false;
+            
+            const topColorFrom = fromTube[fromTube.length - 1];
+            
+            if (toTube.length > 0) {
+                const topColorTo = toTube[toTube.length - 1];
+                if (topColorFrom !== topColorTo) return false;
+            }
+            
+            let liquidCount = 0;
+            for (let i = fromTube.length - 1; i >= 0; i--) {
+                if (fromTube[i] === topColorFrom) {
+                    liquidCount++;
+                } else {
+                    break;
+                }
+            }
+            
+            const availableSpace = 4 - toTube.length;
+            const transferAmount = Math.min(liquidCount, availableSpace);
+            
+            for (let i = 0; i < transferAmount; i++) {
+                toTube.push(fromTube.pop());
+            }
+            
+            renderTubes();
+            return true;
+        }
+
+        // Check for win condition
+        function checkWin() {
+            return gameState.game.tubes.every(tube => {
+                if (tube.length === 0) return true;
+                if (tube.length !== 4) return false;
+                
+                const firstColor = tube[0];
+                return tube.every(color => color === firstColor);
+            });
+        }
+
+        // Handle win
+        function handleWin() {
+            stopTimer();
+            soundSystem.play('win');
+            
+            const currentLevel = gameState.game.currentLevel;
+            const levelData = gameState.levels[currentLevel - 1];
+            
+            levelData.completed = true;
+            localStorage.setItem(`level-${currentLevel}-completed`, 'true');
+            
+            const timeScore = gameState.game.timeLeft;
+            
+            if (!levelData.bestTime || timeScore > parseInt(levelData.bestTime)) {
+                levelData.bestTime = timeScore.toString();
+                localStorage.setItem(`level-${currentLevel}-bestTime`, timeScore.toString());
+            }
+            
+            if (currentLevel < 900) {
+                gameState.levels[currentLevel].unlocked = true;
+                localStorage.setItem(`level-${currentLevel + 1}-unlocked`, 'true');
+            }
+            
+            const minutes = Math.floor(timeScore / 60);
+            const seconds = timeScore % 60;
+            const timeString = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+            
+            elements.game.message.textContent = translations[gameState.settings.language].winMessage
+                .replace('{level}', currentLevel)
+                .replace('{moves}', gameState.game.moves)
+                .replace('{time}', timeString);
+            elements.game.message.style.display = 'block';
+            
+            setTimeout(() => {
+                const nextLevel = gameState.levels.find(l => l.unlocked && !l.completed);
+                if (nextLevel) {
+                    startGame(nextLevel.level);
+                } else {
+                    showScreen('main-menu');
+                }
+            }, 3000);
+        }
+
+        // Provide hint to player
+        function giveHint() {
+            for (let i = 0; i < gameState.game.tubes.length; i++) {
+                if (gameState.game.tubes[i].length === 0) continue;
+                
+                const topColor = gameState.game.tubes[i][gameState.game.tubes[i].length - 1];
+                
+                for (let j = 0; j < gameState.game.tubes.length; j++) {
+                    if (i === j) continue;
+                    
+                    if (gameState.game.tubes[j].length === 0 || 
+                        (gameState.game.tubes[j].length < 4 && 
+                         gameState.game.tubes[j][gameState.game.tubes[j].length - 1] === topColor)) {
+                        
+                        const tubes = document.querySelectorAll('.tube');
+                        tubes[i].classList.add('selected-hint');
+                        tubes[j].classList.add('selected-hint');
+                        
+                        setTimeout(() => {
+                            tubes[i].classList.remove('selected-hint');
+                            tubes[j].classList.remove('selected-hint');
+                        }, 1000);
+                        
+                        return;
+                    }
+                }
+            }
+        }
+
+        // Render levels
+        function renderLevels() {
+            Object.values(elements.levelsGrids).forEach(grid => {
+                grid.innerHTML = '';
+            });
+            
+            gameState.levels.forEach(level => {
+                const levelBtn = document.createElement('button');
+                levelBtn.className = `level-btn ${level.difficulty} ${level.unlocked ? '' : 'locked'}`;
+                levelBtn.textContent = level.level;
+                levelBtn.disabled = !level.unlocked;
+                
+                if (level.completed) {
+                    levelBtn.classList.add('completed');
+                }
+                
+                levelBtn.addEventListener('click', () => {
+                    soundSystem.play('click');
+                    startGame(level.level);
+                });
+                
+                switch (level.difficulty) {
+                    case 'easy':
+                        elements.levelsGrids.easy.appendChild(levelBtn);
+                        break;
+                    case 'medium':
+                        elements.levelsGrids.medium.appendChild(levelBtn);
+                        break;
+                    case 'hard':
+                        elements.levelsGrids.hard.appendChild(levelBtn);
+                        break;
+                    case 'expert':
+                        elements.levelsGrids.expert.appendChild(levelBtn);
+                        break;
+                    case 'master':
+                        elements.levelsGrids.master.appendChild(levelBtn);
+                        break;
+                    case 'legend':
+                        elements.levelsGrids.legend.appendChild(levelBtn);
+                        break;
+                    case 'ultimate':
+                        elements.levelsGrids.ultimate.appendChild(levelBtn);
+                        break;
+                }
+            });
+        }
+
+        // Render backgrounds
+        function renderBackgrounds() {
+            elements.backgrounds.grid.innerHTML = '';
+            
+            backgrounds.forEach(bg => {
+                const thumb = document.createElement('div');
+                thumb.className = `background-thumb ${bg.id === gameState.settings.background ? 'active' : ''}`;
+                thumb.style.background = bg.url || '#f0f8ff';
+                thumb.dataset.id = bg.id;
+                
+                thumb.addEventListener('click', () => {
+                    soundSystem.play('click');
+                    selectBackground(bg.id);
+                });
+                
+                elements.backgrounds.grid.appendChild(thumb);
+            });
+        }
+
+        // Toggle backgrounds grid visibility
+        function toggleBackgroundsGrid() {
+            const isVisible = elements.backgrounds.grid.style.display !== 'none';
+            elements.backgrounds.grid.style.display = isVisible ? 'none' : 'grid';
+        }
+
+        // Select background
+        function selectBackground(bgId) {
+            gameState.settings.background = bgId;
+            localStorage.setItem('background', bgId);
+            applyBackground();
+            renderBackgrounds();
+            toggleBackgroundsGrid();
+        }
+
+        // Apply background
+        function applyBackground() {
+            const bg = backgrounds.find(b => b.id === gameState.settings.background);
+            if (bg && bg.url) {
+                document.body.style.background = bg.url;
+            } else {
+                document.body.style.background = '#f0f8ff';
+            }
+        }
+
+        // Apply settings
+        function applySettings() {
+            if (gameState.settings.theme === 'dark') {
+                document.documentElement.style.setProperty('--background', '#1a1a2e');
+                document.documentElement.style.setProperty('--text-dark', '#f0f0f0');
+                document.documentElement.style.setProperty('--menu-bg', '#16213e');
+                document.documentElement.style.setProperty('--tube-border', '#f0f0f0');
+            } else {
+                document.documentElement.style.setProperty('--background', '#f0f8ff');
+                document.documentElement.style.setProperty('--text-dark', '#2c3e50');
+                document.documentElement.style.setProperty('--menu-bg', '#ffffff');
+                document.documentElement.style.setProperty('--tube-border', '#34495e');
+            }
+            
+            updateLanguage();
+            updateSoundButton();
+            soundSystem.setVolume(parseFloat(gameState.settings.sound));
+        }
+
+        // Load settings
+        function loadSettings() {
+            elements.settings.themeSelect.value = gameState.settings.theme;
+            elements.settings.soundSelect.value = gameState.settings.sound;
+        }
+
+        // Save settings
+        function saveSettings() {
+            gameState.settings.theme = elements.settings.themeSelect.value;
+            gameState.settings.sound = elements.settings.soundSelect.value;
+            
+            localStorage.setItem('theme', gameState.settings.theme);
+            localStorage.setItem('sound', gameState.settings.sound);
+            
+            applySettings();
+            showScreen('main-menu');
+        }
+
+        // Start the game
+        document.addEventListener('DOMContentLoaded', init);
+    </script>
+</body>
+</html>
